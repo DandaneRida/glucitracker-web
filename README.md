@@ -1,16 +1,26 @@
-# 🩺 GluciTracker - Suivi Glycémique
+# 🩺 GluciTracker - Suivi Glycémique & Calcul Insuline
 
-Application web moderne pour suivre la glycémie, l'insuline et les repas avec **export PDF professionnel**.
+Application web moderne pour suivre la glycémie, calculer les doses d'insuline automatiquement et gérer les repas avec **export PDF professionnel**.
 
 ## ✨ Fonctionnalités
 
-- 📊 Suivi glycémie (avant/après)
-- 💉 Gestion insuline (standard + correction)
+- 📊 Suivi glycémie (avant/après) en g/L
+- 💉 **Calcul automatique des doses d'insuline**
+  - Dose pour manger = (glucides ÷ 10) × ratio repas
+  - Dose de correction = (glycémie - 1.2) ÷ indice sensibilité
+  - Dose totale avec ajustements selon glycémie
+  - Correction 3h après (si glycémie > 1.4)
 - 🍽️ Base alimentaire Ciqual (3484 aliments)
-- 📥 Export PDF avec tableaux
+- 📥 Export PDF professionnel avec ratios et doses calculées
 - 📅 Historique 10 derniers jours
 - 💾 Stockage local (localStorage)
 - 📱 100% responsive
+
+## 🎯 Paramètres Patient
+
+- **Indice de sensibilité** : facteur personnel (g/u)
+- **Ratios insuline** : un pour chaque repas (u par 10g de glucides)
+- **Dose basale** : insuline de base
 
 ## 🚀 Démarrage Rapide
 
@@ -21,7 +31,7 @@ cd glucitracker-web
 npm install
 
 # Développement
-npm start
+node dev-server.js
 # http://localhost:3000
 
 # Production
@@ -31,19 +41,40 @@ vercel
 
 ## 📖 Utilisation
 
-1. Remplissez **nom** et **dose basale**
-2. Pour chaque repas :
-   - Glycémie avant
-   - Ajoutez aliments
-   - Insuline + correction
-   - Glycémie après
-3. Cliquez **"Exporter Rapport"** → PDF téléchargé
+1. **Configuration patient** (une seule fois) :
+   - Nom du patient
+   - Dose basale (u)
+   - Indice de sensibilité à l'insuline (g/u)
+   - Ratios insuline pour chaque repas
 
-## 📋 Tableaux PDF
+2. **Pour chaque repas** :
+   - Entrez glycémie AVANT le repas (g/L)
+   - Ajoutez les aliments avec leur poids
+   - Optionnel : resucrage (g glucides)
+   - Entrez glycémie APRÈS le repas (3-4h)
+   - Cliquez **"Valider le repas"**
 
-| Repas | Glyc.Av | Glucides | Insul. | Corr. | Résuç. | Glyc.Ap |
-|-------|---------|----------|--------|-------|--------|---------|
-| Pdt Dej | mg/dL | g | u | u | g | mg/dL |
+3. **Résultats** :
+   - Les doses d'insuline se calculent automatiquement
+   - Affichage direct : dose pour manger, dose correction, dose totale
+   - Export PDF avec tous les calculs
+
+## 📋 Formules de Calcul
+
+- **Dose pour manger** = (total glucides ÷ 10) × ratio du repas
+- **Dose de correction** = (glycémie - 1.2) ÷ indice sensibilité (si glyc. > 1.2 g/L)
+- **Dose totale** = dose repas + dose correction
+  - Si glycémie 0.7-1.0 g/L : dose - 1u
+  - Si glycémie < 0.7 g/L : dose - 2u + alerte resucrage
+- **Correction 3h après** = (glycémie - 1.4) ÷ indice sensibilité (si glyc. > 1.4 g/L)
+
+## 📊 Export PDF
+
+Le rapport inclut :
+- ✅ Bloc infos patient avec ratios en gras
+- ✅ Tableau résumé des repas avec doses calculées
+- ✅ Détail des aliments
+- ✅ Pages d'historique (10 derniers jours)
 
 ## 🛠️ Technologies
 
