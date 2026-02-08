@@ -191,11 +191,11 @@ class GluciApp {
 
       this.alimentsLoaded = true;
       this.hideLoadingIndicator();
-      this.showSuccess(`✅ ${this.aliments.length} aliments Ciqual (BASE LOCALE) chargés !`);
+      this.showSuccess(`${this.aliments.length} aliments Ciqual chargés`);
     } catch (error) {
-      console.error('❌ Erreur chargement aliments:', error);
+      console.error('Erreur chargement aliments:', error);
       this.hideLoadingIndicator();
-      this.showError('⚠️ Impossible de charger les aliments');
+      this.showError('Impossible de charger les aliments');
     }
   }
 
@@ -257,7 +257,7 @@ class GluciApp {
 
   addFoodToMeal(mealType) {
     if (!this.currentFood) {
-      this.showError('❌ Sélectionnez un aliment');
+      this.showError('Sélectionnez un aliment');
       return;
     }
 
@@ -283,7 +283,7 @@ class GluciApp {
     this.calculateDoses(mealType);
     this.saveData();
     this.render();
-    this.showSuccess(`✅ ${this.currentFood.nom} (${poids}g) ajouté`);
+    this.showSuccess(`${this.currentFood.nom} (${poids}g) ajouté`);
 
     document.getElementById(`food-search-${mealType}`).value = '';
     weightInput.value = '';
@@ -296,7 +296,7 @@ class GluciApp {
     this.calculateDoses(mealType);
     this.saveData();
     this.render();
-    this.showSuccess('✅ Aliment supprimé');
+    this.showSuccess('Aliment supprimé');
   }
 
   // ============ VALIDATION DU REPAS ============
@@ -305,7 +305,7 @@ class GluciApp {
     
     // Vérifier qu'il y a au moins une glycémie avant
     if (!meal.glycemie_avant) {
-      this.showError('⚠️ Veuillez remplir la glycémie AVANT le repas');
+      this.showError('Veuillez remplir la glycémie AVANT le repas');
       return;
     }
 
@@ -316,7 +316,7 @@ class GluciApp {
     this.render();
     
     // Afficher un message de succès
-    this.showSuccess(`✅ Repas validé! Dose totale: ${meal.doseTotale.toFixed(2)}u`);
+    this.showSuccess(`Repas validé! Dose totale: ${meal.doseTotale.toFixed(2)}u`);
   }
 
   // ============ MISE À JOUR DES VALEURS ============
@@ -427,9 +427,9 @@ class GluciApp {
     if (!container) return;
 
     const mealsToRender = [
-      { type: 'petit_dejeuner', label: '🌅 Petit Déjeuner' },
-      { type: 'dejeuner', label: '☀️ Déjeuner' },
-      { type: 'diner', label: '🌙 Dîner' }
+      { type: 'petit_dejeuner', label: 'Petit Déjeuner' },
+      { type: 'dejeuner', label: 'Déjeuner' },
+      { type: 'diner', label: 'Dîner' }
     ];
 
     container.innerHTML = mealsToRender.map(meal => this.renderMealBlock(meal.type, meal.label)).join('');
@@ -445,7 +445,7 @@ class GluciApp {
         
         ${meal.validated ? `
           <div style="background: #e8f5e9; border-left: 4px solid #4caf50; padding: 12px; border-radius: 6px; margin-bottom: 15px;">
-            <div style="color: #2e7d32; font-weight: bold; font-size: 12px; margin-bottom: 8px;">✅ REPAS VALIDÉ</div>
+            <div style="color: #2e7d32; font-weight: bold; font-size: 12px; margin-bottom: 8px;">REPAS VALIDÉ</div>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 12px;">
               <div>
                 <span style="color: #666; display: block; font-size: 11px;">Dose pour manger</span>
@@ -456,7 +456,7 @@ class GluciApp {
                 <span style="color: #2e7d32; font-weight: bold; font-size: 14px;">${meal.doseCorrection.toFixed(2)} u</span>
               </div>
               <div style="grid-column: 1 / -1;">
-                <span style="color: #666; display: block; font-size: 11px;">💉 DOSE TOTALE À INJECTER</span>
+                <span style="color: #666; display: block; font-size: 11px;">DOSE TOTALE À INJECTER</span>
                 <span style="color: #1565c0; font-weight: bold; font-size: 16px;">${meal.doseTotale.toFixed(2)} u</span>
               </div>
             </div>
@@ -542,7 +542,7 @@ class GluciApp {
 
         <!-- SECTION DES CALCULS D'INSULINE -->
         <div class="calculation-section">
-          <label>📊 Calculs d'Insuline</label>
+          <label>Calculs d'Insuline</label>
           
           <div class="calculation-input-group">
             <div>
@@ -571,10 +571,10 @@ class GluciApp {
           </div>
 
           <div style="background: white; padding: 15px; border-radius: 8px; border-left: 5px solid #667eea; margin: 15px 0;">
-            <label style="font-weight: 700; color: #667eea; font-size: 13px; margin-bottom: 8px; display: block;">💉 DOSE TOTALE À INJECTER</label>
+            <label style="font-weight: 700; color: #667eea; font-size: 13px; margin-bottom: 8px; display: block;">DOSE TOTALE À INJECTER</label>
             <span class="calculation-result" style="font-size: 20px; margin: 0;">${meal.doseTotale.toFixed(2)} u</span>
             <small style="display: block; color: #999; font-size: 11px; margin-top: 8px;">
-              ${meal.needsResucrage ? '⚠️ Besoin de resucrage (glyc. < 0.7)' : ''}
+              ${meal.needsResucrage ? 'Besoin de resucrage (glyc. < 0.7)' : ''}
               ${meal.glycemie_avant && parseFloat(meal.glycemie_avant) >= 0.7 && parseFloat(meal.glycemie_avant) <= 1.0 ? '📉 Dose réduite de 1u (glyc. 0.7-1.0)' : ''}
             </small>
           </div>
@@ -632,7 +632,7 @@ class GluciApp {
   .food { margin: 4px 0; font-size: 11px; }
 </style>
 
-<h1>📊 GluciTracker - Rapport de Suivi</h1>
+<h1>GluciTracker - Rapport de Suivi</h1>
 <div class="date">Date: ${aujourd_hui}</div>
 
 <div class="patient-box">
@@ -658,7 +658,7 @@ class GluciApp {
   </tbody>
 </table>
 
-<h2>🍽️ Détail des Aliments par Repas</h2>
+<h2>Détail des Aliments par Repas</h2>
 ${this.buildFoodDetails()}
 `;
     
@@ -668,7 +668,7 @@ ${this.buildFoodDetails()}
   // ============ EXPORT RAPPORT (PDF) ============
   exportReport() {
     try {
-      this.showSuccess('⏳ Génération du PDF...');
+      this.showSuccess('Génération du PDF en cours...'); 
       
       const { jsPDF } = window.jspdf;
       const doc = new jsPDF('p', 'mm', 'a4');
@@ -892,7 +892,7 @@ ${this.buildFoodDetails()}
   }
 
   clearPatientData() {
-    if (confirm('⚠️ Êtes-vous sûr de vouloir effacer les informations du patient?\n\nCette action est irréversible.')) {
+    if (confirm('Êtes-vous sûr de vouloir effacer les informations du patient?\n\nCette action est irréversible.')) {
       this.patientData = {
         nom: '',
         basale: 0,
@@ -903,13 +903,13 @@ ${this.buildFoodDetails()}
       };
       this.savePatientData();
       this.render();
-      this.showSuccess('✅ Infos patient effacées');
+      this.showSuccess('Infos patient effacées');
     }
   }
 
   clearMealData(mealType) {
     const labels = { petit_dejeuner: 'Petit Déjeuner', dejeuner: 'Déjeuner', diner: 'Dîner' };
-    if (confirm(`⚠️ Effacer les données de ${labels[mealType]}?`)) {
+    if (confirm(`Effacer les données de ${labels[mealType]}?`)) {
       this.mealsData[mealType] = {
         aliments: [],
         glycemie_avant: null,
@@ -923,7 +923,7 @@ ${this.buildFoodDetails()}
       };
       this.saveData();
       this.render();
-      this.showSuccess(`✅ ${labels[mealType]} effacé`);
+      this.showSuccess(`${labels[mealType]} effacé`);
     }
   }
   
@@ -1193,10 +1193,10 @@ ${this.buildFoodDetails()}
       
       return `
         <div style="background: #f5f5f5; padding: 12px; border-radius: 8px; border-left: 4px solid #667eea; cursor: pointer;" onclick="app.restoreHistoricalDay('${date}')">
-          <div style="font-weight: 600; color: #333; margin-bottom: 5px;">📅 ${dateStr}</div>
+          <div style="font-weight: 600; color: #333; margin-bottom: 5px;">${dateStr}</div>
           <div style="font-size: 12px; color: #666;">
-            <span>📊 Glucides: ${totalGlucides.toFixed(1)}g</span> • 
-            <span>💉 Insuline: ${totalInsulime}u</span>
+            <span>Glucides: ${totalGlucides.toFixed(1)}g</span> • 
+            <span>Insuline: ${totalInsulime}u</span>
           </div>
         </div>
       `;
@@ -1209,7 +1209,7 @@ ${this.buildFoodDetails()}
       this.mealsData = JSON.parse(JSON.stringify(history[date]));
       this.saveData();
       this.render();
-      this.showSuccess(`✅ Données du ${new Date(date).toLocaleDateString('fr-FR')} restaurées`);
+      this.showSuccess(`Données du ${new Date(date).toLocaleDateString('fr-FR')} restaurées`);
       this.toggleHistoryPanel();
     }
   }
