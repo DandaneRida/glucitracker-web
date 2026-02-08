@@ -30,9 +30,10 @@
             color: white;
             margin-bottom: 30px;
             background: rgba(255, 255, 255, 0.1);
-            padding: 20px;
-            border-radius: 10px;
+            padding: 24px 20px;
+            border-radius: 12px;
             backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         header h1 {
@@ -42,11 +43,14 @@
             align-items: center;
             justify-content: center;
             gap: 10px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
         }
 
         header p {
             font-size: 14px;
-            opacity: 0.9;
+            opacity: 0.95;
+            font-weight: 300;
         }
 
         #loading-indicator {
@@ -106,21 +110,24 @@
         .patient-info-block {
             background: white;
             border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(102, 126, 234, 0.1);
         }
 
         .patient-info-block h3 {
             color: #667eea;
-            margin-bottom: 15px;
+            margin-bottom: 18px;
             font-size: 16px;
+            font-weight: 700;
+            letter-spacing: 0.3px;
         }
 
         .patient-info-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 15px;
+            gap: 18px;
         }
 
         .patient-info-grid label {
@@ -133,42 +140,52 @@
 
         .patient-info-grid input {
             width: 100%;
-            padding: 12px;
+            padding: 12px 14px;
             border: 2px solid #e0e0e0;
             border-radius: 8px;
             font-size: 14px;
             font-family: inherit;
-            transition: border-color 0.3s;
+            transition: all 0.3s ease;
+            background: #fafafa;
         }
 
         .patient-info-grid input:focus {
             outline: none;
             border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
             background: #f9f9ff;
         }
 
         #meals-container {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 20px;
+            gap: 24px;
             margin-bottom: 30px;
         }
 
         .meal-block {
             background: white;
             border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 24px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
             border-left: 5px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .meal-block:hover {
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.15);
         }
 
         .meal-block-title {
             font-size: 18px;
-            font-weight: bold;
+            font-weight: 700;
             color: #667eea;
             margin-bottom: 20px;
-            padding-bottom: 10px;
+            padding-bottom: 12px;
             border-bottom: 2px solid #f0f0f0;
+            letter-spacing: 0.3px;
         }
 
         .meal-section {
@@ -185,8 +202,21 @@
 
         .meal-input {
             width: 100%;
-            padding: 12px;
+            padding: 12px 14px;
             border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            background: #fafafa;
+        }
+
+        .meal-input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
             border-radius: 8px;
             font-size: 14px;
             font-family: inherit;
@@ -398,42 +428,59 @@
             display: flex;
             gap: 12px;
             margin-bottom: 30px;
+            flex-wrap: wrap;
         }
 
-        .btn-primary, .btn-secondary {
+        .btn-primary, .btn-secondary, .btn-danger {
             flex: 1;
-            padding: 14px;
+            min-width: 150px;
+            padding: 14px 16px;
             border: none;
             border-radius: 8px;
             cursor: pointer;
             font-weight: 600;
             font-size: 16px;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
         }
 
         .btn-primary {
             background: white;
             color: #667eea;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            font-weight: 700;
         }
 
         .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.35);
         }
 
         .btn-secondary {
             background: rgba(255, 255, 255, 0.2);
             color: white;
             backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
         .btn-secondary:hover {
             background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .btn-danger {
+            background: rgba(244, 67, 54, 0.85);
+            color: white;
+            border: 1px solid rgba(244, 67, 54, 0.5);
+        }
+
+        .btn-danger:hover {
+            background: rgba(244, 67, 54, 1);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(244, 67, 54, 0.35);
         }
 
         footer {
@@ -526,15 +573,19 @@
         <div class="action-buttons">
             <button class="btn-primary" id="btn-export">
                 <i class="fas fa-download"></i>
-                📥 Exporter Rapport
+                📥 Exporter Rapport du Jour
             </button>
             <button class="btn-secondary" id="btn-history">
                 <i class="fas fa-history"></i>
                 📅 Voir Historique
             </button>
+            <button class="btn-danger" id="btn-clear-patient">
+                <i class="fas fa-user-slash"></i>
+                👤 Effacer Infos Patient
+            </button>
             <button class="btn-secondary" id="btn-clear-all">
                 <i class="fas fa-trash"></i>
-                🗑️ Effacer Données
+                🗑️ Tout Effacer
             </button>
         </div>
     </div>

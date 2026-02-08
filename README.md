@@ -118,22 +118,24 @@ MIT License - Libre d'utilisation
 
 ## 👨‍💻 Auteur
 
-**Danda Ridadandane**
+** Rida Dandane**
 - GitHub: [@DandaneRida](https://github.com/DandaneRida)
 - Email: ridadandane@gmail.com
 
 ---
 
-**Version** : 1.0.0  
+**Version** : 2.0.0  
 **Status** : ✅ Production Ready
 
 
-## 👨‍💻 Auteur & Support
+## 👨‍💻 Auteur
 
-**Danda Rida**
-- Code Source: https://github.com/DandaneRida
-- Contacter le développeur: ridadandane@gmail.com
+**Rida Dandane**
+- 🔗 GitHub: [@DandaneRida](https://github.com/DandaneRida)
+- 📧 Email: [ridadancane@gmail.com](mailto:ridadandane@gmail.com)
 
-## �📝 License
+---
 
-MIT
+**Version**: 2.0.0  
+**Status**: ✅ Production Ready  
+**Dernière mise à jour**: Février 2026

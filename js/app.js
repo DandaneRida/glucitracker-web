@@ -599,6 +599,13 @@ class GluciApp {
             onchange="app.updateMealValueAndCalculate('${mealType}', 'glycemie_apres', this.value)"
             class="meal-input">
         </div>
+
+        <!-- Bouton Vider le repas -->
+        <div class="meal-section" style="margin-top: 15px;">
+          <button onclick="app.clearMealData('${mealType}')" class="btn-danger" style="width: 100%; padding: 12px; border: 2px solid #f44336; border-radius: 8px; background: rgba(244, 67, 54, 0.1); color: #f44336; font-weight: 600; cursor: pointer;">
+            <i class="fas fa-trash-alt"></i> Vider ce repas
+          </button>
+        </div>
       </div>
     `;
   }
@@ -880,10 +887,46 @@ ${this.buildFoodDetails()}
       
       // Télécharger
       doc.save(`Rapport_Gluci_${this.patientData.nom || 'Suivi'}_${new Date().toISOString().split('T')[0]}.pdf`);
-      this.showSuccess('✅ PDF téléchargé !');
+      this.showSuccess('✅ PDF du jour téléchargé !');
     } catch (error) {
       console.error('Erreur PDF:', error);
       this.showError('❌ Erreur lors de la génération du PDF');
+    }
+  }
+
+  clearPatientData() {
+    if (confirm('⚠️ Êtes-vous sûr de vouloir effacer les informations du patient?\n\nCette action est irréversible.')) {
+      this.patientData = {
+        nom: '',
+        basale: 0,
+        insulinSensitivity: 0,
+        ratioPetitDejeuner: 0,
+        ratioDejeuner: 0,
+        ratioDiner: 0
+      };
+      this.savePatientData();
+      this.render();
+      this.showSuccess('✅ Infos patient effacées');
+    }
+  }
+
+  clearMealData(mealType) {
+    const labels = { petit_dejeuner: 'Petit Déjeuner', dejeuner: 'Déjeuner', diner: 'Dîner' };
+    if (confirm(`⚠️ Effacer les données de ${labels[mealType]}?`)) {
+      this.mealsData[mealType] = {
+        aliments: [],
+        glycemie_avant: null,
+        glycemie_apres: null,
+        resucrage: 0,
+        doseRepas: 0,
+        doseCorrection: 0,
+        doseTotale: 0,
+        correctionTroisHeures: 0,
+        validated: false
+      };
+      this.saveData();
+      this.render();
+      this.showSuccess(`✅ ${labels[mealType]} effacé`);
     }
   }
   
@@ -1101,10 +1144,12 @@ ${this.buildFoodDetails()}
     const btnExport = document.getElementById('btn-export');
     const btnClear = document.getElementById('btn-clear-all');
     const btnHistory = document.getElementById('btn-history');
+    const btnClearPatient = document.getElementById('btn-clear-patient');
     
     if (btnExport) btnExport.onclick = () => this.exportReport();
     if (btnClear) btnClear.onclick = () => this.clearAllData();
     if (btnHistory) btnHistory.onclick = () => this.toggleHistoryPanel();
+    if (btnClearPatient) btnClearPatient.onclick = () => this.clearPatientData();
   }
 
   toggleHistoryPanel() {
