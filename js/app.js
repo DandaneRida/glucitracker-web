@@ -882,9 +882,6 @@ ${this.buildFoodDetails()}
         yPos += 5;
       });
       
-      // Ajouter pages historique
-      this.addHistoryPages(doc);
-      
       // Télécharger
       doc.save(`Rapport_Gluci_${this.patientData.nom || 'Suivi'}_${new Date().toISOString().split('T')[0]}.pdf`);
       this.showSuccess('✅ PDF du jour téléchargé !');
