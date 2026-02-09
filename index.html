@@ -14,8 +14,8 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7ff 0%, #e8ebff 100%);
             min-height: 100vh;
             padding: 20px;
         }
@@ -27,30 +27,31 @@
 
         header {
             text-align: center;
-            color: white;
+            color: #1F2937;
             margin-bottom: 30px;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 24px 20px;
-            border-radius: 12px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: white;
+            padding: 32px 24px;
+            border-radius: 16px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(99, 102, 241, 0.08);
         }
 
         header h1 {
-            font-size: 28px;
-            margin-bottom: 5px;
+            font-size: 32px;
+            margin-bottom: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 12px;
             font-weight: 700;
-            letter-spacing: 0.5px;
+            letter-spacing: -0.5px;
+            color: #4F46E5;
         }
 
         header p {
-            font-size: 14px;
-            opacity: 0.95;
-            font-weight: 300;
+            font-size: 15px;
+            opacity: 0.7;
+            font-weight: 400;
         }
 
         #loading-indicator {
@@ -78,12 +79,13 @@
         }
 
         .alert {
-            padding: 15px 20px;
-            border-radius: 8px;
+            padding: 14px 18px;
+            border-radius: 10px;
             margin-bottom: 10px;
-            animation: slideIn 0.3s ease-in;
+            animation: slideIn 0.3s ease;
             font-weight: 500;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            font-size: 14px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
         @keyframes slideIn {
@@ -98,30 +100,32 @@
         }
 
         .alert.success {
-            background: #4caf50;
-            color: white;
+            background: #DCFCE7;
+            color: #166534;
+            border: 1px solid #86EFAC;
         }
 
         .alert.error {
-            background: #f44336;
-            color: white;
+            background: #FEE2E2;
+            color: #991B1B;
+            border: 1px solid #FECACA;
         }
 
         .patient-info-block {
             background: white;
-            border-radius: 12px;
-            padding: 24px;
+            border-radius: 16px;
+            padding: 28px;
             margin-bottom: 24px;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-            border: 1px solid rgba(102, 126, 234, 0.1);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(99, 102, 241, 0.08);
         }
 
         .patient-info-block h3 {
-            color: #667eea;
-            margin-bottom: 18px;
+            color: #4F46E5;
+            margin-bottom: 20px;
             font-size: 16px;
             font-weight: 700;
-            letter-spacing: 0.3px;
+            letter-spacing: -0.3px;
         }
 
         .patient-info-grid {
@@ -141,21 +145,19 @@
         .patient-info-grid input {
             width: 100%;
             padding: 12px 14px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
+            border: 1px solid #E5E7EB;
+            border-radius: 10px;
             font-size: 14px;
             font-family: inherit;
-            transition: all 0.3s ease;
-            background: #fafafa;
+            transition: all 0.2s ease;
+            background: white;
         }
 
         .patient-info-grid input:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #4F46E5;
             background: white;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-            background: #f9f9ff;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.08);
         }
 
         #meals-container {
@@ -167,25 +169,26 @@
 
         .meal-block {
             background: white;
-            border-radius: 12px;
-            padding: 24px;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-            border-left: 5px solid #667eea;
+            border-radius: 16px;
+            padding: 28px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(99, 102, 241, 0.08);
+            border-left: 5px solid #4F46E5;
             transition: all 0.3s ease;
         }
 
         .meal-block:hover {
-            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.15);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.1);
         }
 
         .meal-block-title {
-            font-size: 18px;
+            font-size: 17px;
             font-weight: 700;
-            color: #667eea;
+            color: #4F46E5;
             margin-bottom: 20px;
             padding-bottom: 12px;
-            border-bottom: 2px solid #f0f0f0;
-            letter-spacing: 0.3px;
+            border-bottom: 1px solid #F3F4F6;
+            letter-spacing: -0.3px;
         }
 
         .meal-section {
@@ -203,19 +206,19 @@
         .meal-input {
             width: 100%;
             padding: 12px 14px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
+            border: 1px solid #E5E7EB;
+            border-radius: 10px;
             font-size: 14px;
             font-family: inherit;
-            transition: all 0.3s ease;
-            background: #fafafa;
+            transition: all 0.2s ease;
+            background: white;
         }
 
         .meal-input:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #4F46E5;
             background: white;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.08);
         }
             border-radius: 8px;
             font-size: 14px;
@@ -433,62 +436,63 @@
 
         .btn-primary, .btn-secondary, .btn-danger {
             flex: 1;
-            min-width: 150px;
-            padding: 14px 16px;
+            min-width: 140px;
+            padding: 12px 16px;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             cursor: pointer;
             font-weight: 600;
-            font-size: 16px;
-            transition: all 0.3s ease;
+            font-size: 15px;
+            transition: all 0.2s ease;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
         }
 
         .btn-primary {
-            background: white;
-            color: #667eea;
-            font-weight: 700;
+            background: #4F46E5;
+            color: white;
+            font-weight: 600;
         }
 
         .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.35);
+            background: #4338CA;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
         }
 
         .btn-secondary {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: white;
+            color: #4F46E5;
+            border: 1px solid #E5E7EB;
         }
 
         .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.3);
-            border-color: rgba(255, 255, 255, 0.5);
+            background: #F9FAFB;
+            border-color: #4F46E5;
+            box-shadow: 0 2px 8px rgba(79, 70, 229, 0.1);
         }
 
         .btn-danger {
-            background: rgba(244, 67, 54, 0.85);
+            background: #EF4444;
             color: white;
-            border: 1px solid rgba(244, 67, 54, 0.5);
+            border: none;
         }
 
         .btn-danger:hover {
-            background: rgba(244, 67, 54, 1);
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(244, 67, 54, 0.35);
+            background: #DC2626;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
         }
 
         footer {
             text-align: center;
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 12px;
-            margin-top: 30px;
-            padding: 20px;
+            color: #6B7280;
+            font-size: 13px;
+            margin-top: 40px;
+            padding: 24px;
         }
 
         @media (max-width: 600px) {
