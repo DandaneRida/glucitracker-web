@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- v2.0 - Full insulin calculation engine -->
     <title>GluciTracker - Suivi Glycémie & Insuline</title>
+    
+    <!-- PWA Manifest & Service Worker -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#4F46E5">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="GluciTracker">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect fill='%234F46E5' width='180' height='180'/><text x='90' y='130' font-size='70' font-weight='bold' fill='white' text-anchor='middle' font-family='Arial'>GT</text></svg>">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -601,6 +610,29 @@
             <a href="mailto:ridadandane@gmail.com" style="color: white; text-decoration: none;">Contact</a>
         </p>
     </footer>
+
+    <!-- Service Worker Registration for Offline Support -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('service-worker.js')
+            .then(reg => {
+              console.log('✅ Service Worker enregistré avec succès');
+              // Vérifier les mises à jour
+              reg.addEventListener('updatefound', () => {
+                const newWorker = reg.installing;
+                newWorker.addEventListener('statechange', () => {
+                  if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                    console.log('🔄 Mise à jour disponible');
+                  }
+                });
+              });
+            })
+            .catch(err => console.log('⚠️ Erreur Service Worker:', err));
+        });
+      }
+    </script>
+
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="js/app.js"></script>

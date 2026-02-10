@@ -5,6 +5,7 @@ class GluciApp {
     this.searchTimeout = null;
     this.currentMeal = null;
     this.currentFood = null;
+    this.currentLoadedDate = null; // Track la date chargée de l'historique
 
     this.showLoadingIndicator();
     this.loadData();
@@ -256,6 +257,13 @@ class GluciApp {
   }
 
   addFoodToMeal(mealType) {
+    // Si on modifie à partir de l'historique, revenir à aujourd'hui
+    const today = new Date().toISOString().split('T')[0];
+    if (this.currentLoadedDate && this.currentLoadedDate !== today) {
+      this.currentLoadedDate = null;
+      this.showInfo('Retour aux données d\'aujourd\'hui');
+    }
+    
     if (!this.currentFood) {
       this.showError('Sélectionnez un aliment');
       return;
@@ -291,6 +299,13 @@ class GluciApp {
   }
 
   deleteFoodFromMeal(mealType, id) {
+    // Si on modifie à partir de l'historique, revenir à aujourd'hui
+    const today = new Date().toISOString().split('T')[0];
+    if (this.currentLoadedDate && this.currentLoadedDate !== today) {
+      this.currentLoadedDate = null;
+      this.showInfo('Retour aux données d\'aujourd\'hui');
+    }
+    
     this.mealsData[mealType].aliments = this.mealsData[mealType].aliments.filter(f => f.id !== id);
     this.saveData();
     this.calculateDoses(mealType);
@@ -321,12 +336,26 @@ class GluciApp {
 
   // ============ MISE À JOUR DES VALEURS ============
   updateMealValue(mealType, field, value) {
+    // Si on modifie à partir de l'historique, revenir à aujourd'hui
+    const today = new Date().toISOString().split('T')[0];
+    if (this.currentLoadedDate && this.currentLoadedDate !== today) {
+      this.currentLoadedDate = null;
+      this.showInfo('Retour aux données d\'aujourd\'hui');
+    }
+    
     this.mealsData[mealType][field] = value;
     this.saveData();
     this.render();
   }
 
   updateMealValueAndCalculate(mealType, field, value) {
+    // Si on modifie à partir de l'historique, revenir à aujourd'hui
+    const today = new Date().toISOString().split('T')[0];
+    if (this.currentLoadedDate && this.currentLoadedDate !== today) {
+      this.currentLoadedDate = null;
+      this.showInfo('Retour aux données d\'aujourd\'hui');
+    }
+    
     this.mealsData[mealType][field] = value;
     this.calculateDoses(mealType);
     this.saveData();
@@ -670,6 +699,10 @@ ${this.buildFoodDetails()}
     try {
       this.showSuccess('Génération du PDF en cours...'); 
       
+      // Déterminer quelle date utiliser
+      const reportDate = this.currentLoadedDate ? new Date(this.currentLoadedDate + 'T00:00:00') : new Date();
+      const dateStr = reportDate.toLocaleDateString('fr-FR');
+      
       const { jsPDF } = window.jspdf;
       const doc = new jsPDF('p', 'mm', 'a4');
       let yPos = 15;
@@ -723,7 +756,7 @@ ${this.buildFoodDetails()}
       doc.setFont(undefined, 'bold');
       doc.text('Date:', rightCol, infoY);
       doc.setFont(undefined, 'normal');
-      doc.text(new Date().toLocaleDateString('fr-FR'), rightCol + 12, infoY);
+      doc.text(dateStr, rightCol + 12, infoY);
       
       // Ligne 2
       infoY += 5;
@@ -908,6 +941,13 @@ ${this.buildFoodDetails()}
   }
 
   clearMealData(mealType) {
+    // Si on modifie à partir de l'historique, revenir à aujourd'hui
+    const today = new Date().toISOString().split('T')[0];
+    if (this.currentLoadedDate && this.currentLoadedDate !== today) {
+      this.currentLoadedDate = null;
+      this.showInfo('Retour aux données d\'aujourd\'hui');
+    }
+    
     const labels = { petit_dejeuner: 'Petit Déjeuner', dejeuner: 'Déjeuner', diner: 'Dîner' };
     if (confirm(`Effacer les données de ${labels[mealType]}?`)) {
       this.mealsData[mealType] = {
@@ -1125,6 +1165,16 @@ ${this.buildFoodDetails()}
     setTimeout(() => alert.remove(), 3000);
   }
 
+  showInfo(message) {
+    const alert = document.createElement('div');
+    alert.className = 'alert info';
+    alert.textContent = message;
+    alert.style.backgroundColor = '#DBEAFE';
+    alert.style.color = '#0369a1';
+    this.alertsContainer.appendChild(alert);
+    setTimeout(() => alert.remove(), 3000);
+  }
+
   clearAllData() {
     if (!confirm('Êtes-vous sûr ? Cette action est irréversible.')) return;
     this.mealsData = {
@@ -1207,9 +1257,10 @@ ${this.buildFoodDetails()}
     const history = JSON.parse(localStorage.getItem('meals_history') || '{}');
     if (history[date]) {
       this.mealsData = JSON.parse(JSON.stringify(history[date]));
+      this.currentLoadedDate = date; // Tracker la date chargée
       this.saveData();
       this.render();
-      this.showSuccess(`Données du ${new Date(date).toLocaleDateString('fr-FR')} restaurées`);
+      this.showSuccess(`Données du ${new Date(date + 'T00:00:00').toLocaleDateString('fr-FR')} restaurées`);
       this.toggleHistoryPanel();
     }
   }
