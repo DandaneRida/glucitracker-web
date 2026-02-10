@@ -915,8 +915,9 @@ ${this.buildFoodDetails()}
         yPos += 5;
       });
       
-      // Télécharger
-      doc.save(`Rapport_Gluci_${this.patientData.nom || 'Suivi'}_${new Date().toISOString().split('T')[0]}.pdf`);
+      // Télécharger avec la bonne date
+      const fileName = `Rapport_Gluci_${this.patientData.nom || 'Suivi'}_${this.currentLoadedDate || new Date().toISOString().split('T')[0]}.pdf`;
+      doc.save(fileName);
       this.showSuccess('✅ PDF du jour téléchargé !');
     } catch (error) {
       console.error('Erreur PDF:', error);

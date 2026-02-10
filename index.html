@@ -618,6 +618,8 @@
           navigator.serviceWorker.register('service-worker.js')
             .then(reg => {
               console.log('✅ Service Worker enregistré avec succès');
+              console.log('Scope:', reg.scope);
+              
               // Vérifier les mises à jour
               reg.addEventListener('updatefound', () => {
                 const newWorker = reg.installing;
@@ -627,9 +629,18 @@
                   }
                 });
               });
+              
+              // Test offline
+              console.log('Mode offline supporté: ', 'serviceWorker' in navigator && 'caches' in window);
             })
-            .catch(err => console.log('⚠️ Erreur Service Worker:', err));
+            .catch(err => {
+              console.error('❌ Erreur Service Worker:', err);
+              console.error('URL du SW:', './service-worker.js');
+              console.error('Origine:', window.location.origin);
+            });
         });
+      } else {
+        console.warn('⚠️ Service Worker non supporté par ce navigateur');
       }
     </script>
 
