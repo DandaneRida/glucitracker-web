@@ -1,21 +1,48 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- v2.0 - Full insulin calculation engine -->
     <title>GluciTracker - Suivi Glycémie & Insuline</title>
-    
+
     <!-- PWA Manifest & Service Worker -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#4F46E5">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="GluciTracker">
-    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect fill='%234F46E5' width='180' height='180'/><text x='90' y='130' font-size='70' font-weight='bold' fill='white' text-anchor='middle' font-family='Arial'>GT</text></svg>">
-    
+    <link rel="apple-touch-icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect fill='%234F46E5' width='180' height='180'/><text x='90' y='130' font-size='70' font-weight='bold' fill='white' text-anchor='middle' font-family='Arial'>GT</text></svg>">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --primary-light: #EEF2FF;
+            --secondary: #10B981;
+            --secondary-hover: #059669;
+            --danger: #EF4444;
+            --danger-hover: #DC2626;
+            --warning: #F59E0B;
+            --bg-gradient-start: #f8fafc;
+            --bg-gradient-end: #e2e8f0;
+            --surface: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-full: 9999px;
+            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -23,10 +50,13 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #f5f7ff 0%, #e8ebff 100%);
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            color: var(--text-main);
             min-height: 100vh;
             padding: 20px;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
         }
 
         .container {
@@ -36,17 +66,31 @@
 
         header {
             text-align: center;
-            color: #1F2937;
+            color: var(--text-main);
             margin-bottom: 30px;
-            background: white;
+            background: var(--surface);
             padding: 32px 24px;
-            border-radius: 16px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-            border: 1px solid rgba(99, 102, 241, 0.08);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(10px);
+            animation: fadeInDown 0.6s ease-out;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         header h1 {
-            font-size: 32px;
+            font-size: 36px;
             margin-bottom: 8px;
             display: flex;
             align-items: center;
@@ -54,30 +98,44 @@
             gap: 12px;
             font-weight: 700;
             letter-spacing: -0.5px;
-            color: #4F46E5;
+            background: linear-gradient(135deg, var(--primary), #818cf8);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         header p {
-            font-size: 15px;
-            opacity: 0.7;
-            font-weight: 400;
+            font-size: 16px;
+            color: var(--text-muted);
+            font-weight: 500;
         }
 
         #loading-indicator {
             display: none;
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
+            background: rgba(255, 255, 255, 0.8);
+            color: var(--primary);
             padding: 15px;
-            border-radius: 8px;
+            border-radius: var(--radius-md);
             text-align: center;
             margin-bottom: 20px;
             backdrop-filter: blur(10px);
+            box-shadow: var(--shadow-sm);
+            font-weight: 600;
             animation: pulse 1.5s ease-in-out infinite;
         }
 
         @keyframes pulse {
-            0%, 100% { opacity: 0.8; }
-            50% { opacity: 1; }
+
+            0%,
+            100% {
+                opacity: 0.7;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.02);
+            }
         }
 
         #alerts-container {
@@ -85,23 +143,29 @@
             top: 20px;
             right: 20px;
             z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
         .alert {
-            padding: 14px 18px;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            animation: slideIn 0.3s ease;
+            padding: 16px 20px;
+            border-radius: var(--radius-md);
+            animation: slideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             font-weight: 500;
             font-size: 14px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
         @keyframes slideIn {
             from {
-                transform: translateX(400px);
+                transform: translateX(120%);
                 opacity: 0;
             }
+
             to {
                 transform: translateX(0);
                 opacity: 1;
@@ -109,64 +173,87 @@
         }
 
         .alert.success {
-            background: #DCFCE7;
+            background: #f0fdf4;
             color: #166534;
-            border: 1px solid #86EFAC;
+            border-left: 4px solid #22c55e;
         }
 
         .alert.error {
-            background: #FEE2E2;
-            color: #991B1B;
-            border: 1px solid #FECACA;
+            background: #fef2f2;
+            color: #991b1b;
+            border-left: 4px solid #ef4444;
+        }
+
+        .alert.info {
+            background: #eff6ff;
+            color: #1e40af;
+            border-left: 4px solid #3b82f6;
         }
 
         .patient-info-block {
-            background: white;
-            border-radius: 16px;
+            background: var(--surface);
+            border-radius: var(--radius-lg);
             padding: 28px;
             margin-bottom: 24px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-            border: 1px solid rgba(99, 102, 241, 0.08);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            transition: var(--transition);
+        }
+
+        .patient-info-block:hover {
+            box-shadow: var(--shadow-md);
+            border-color: rgba(79, 70, 229, 0.2);
         }
 
         .patient-info-block h3 {
-            color: #4F46E5;
-            margin-bottom: 20px;
-            font-size: 16px;
+            color: var(--primary);
+            margin-bottom: 24px;
+            font-size: 18px;
             font-weight: 700;
-            letter-spacing: -0.3px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .patient-info-block h3 i {
+            font-size: 20px;
+            padding: 8px;
+            background: var(--primary-light);
+            border-radius: 8px;
+            color: var(--primary);
         }
 
         .patient-info-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 18px;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
         }
 
         .patient-info-grid label {
             display: block;
             font-weight: 600;
-            color: #333;
+            color: var(--text-main);
             margin-bottom: 8px;
             font-size: 14px;
         }
 
         .patient-info-grid input {
             width: 100%;
-            padding: 12px 14px;
-            border: 1px solid #E5E7EB;
-            border-radius: 10px;
-            font-size: 14px;
+            padding: 14px 16px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            font-size: 15px;
             font-family: inherit;
-            transition: all 0.2s ease;
-            background: white;
+            transition: var(--transition);
+            background: #f8fafc;
+            color: var(--text-main);
         }
 
         .patient-info-grid input:focus {
             outline: none;
-            border-color: #4F46E5;
-            background: white;
-            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.08);
+            border-color: var(--primary);
+            background: var(--surface);
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
         }
 
         #meals-container {
@@ -174,71 +261,77 @@
             grid-template-columns: 1fr;
             gap: 24px;
             margin-bottom: 30px;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .meal-block {
-            background: white;
-            border-radius: 16px;
-            padding: 28px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-            border: 1px solid rgba(99, 102, 241, 0.08);
-            border-left: 5px solid #4F46E5;
-            transition: all 0.3s ease;
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+            border-left: 6px solid var(--primary);
+            transition: var(--transition);
         }
 
         .meal-block:hover {
-            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.1);
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
         }
 
         .meal-block-title {
-            font-size: 17px;
+            font-size: 20px;
             font-weight: 700;
-            color: #4F46E5;
-            margin-bottom: 20px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid #F3F4F6;
-            letter-spacing: -0.3px;
+            color: var(--primary);
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid var(--bg-gradient-start);
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
         .meal-section {
-            margin-bottom: 18px;
+            margin-bottom: 20px;
         }
 
         .meal-section label {
             display: block;
             font-weight: 600;
-            color: #333;
+            color: var(--text-main);
             margin-bottom: 8px;
             font-size: 14px;
         }
 
         .meal-input {
             width: 100%;
-            padding: 12px 14px;
-            border: 1px solid #E5E7EB;
-            border-radius: 10px;
-            font-size: 14px;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            font-size: 15px;
             font-family: inherit;
-            transition: all 0.2s ease;
-            background: white;
+            transition: var(--transition);
+            background: #f8fafc;
+            color: var(--text-main);
         }
 
         .meal-input:focus {
             outline: none;
-            border-color: #4F46E5;
-            background: white;
-            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.08);
-        }
-            border-radius: 8px;
-            font-size: 14px;
-            font-family: inherit;
-            transition: border-color 0.3s;
-        }
-
-        .meal-input:focus {
-            outline: none;
-            border-color: #667eea;
-            background: #f9f9ff;
+            border-color: var(--primary);
+            background: var(--surface);
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.15);
         }
 
         .food-search-container {
@@ -250,284 +343,349 @@
             top: 100%;
             left: 0;
             right: 0;
-            background: white;
-            border: 2px solid #e0e0e0;
-            border-top: none;
-            border-radius: 0 0 8px 8px;
-            max-height: 300px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            max-height: 250px;
             overflow-y: auto;
             z-index: 100;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow-lg);
+            margin-top: 8px;
         }
 
         .food-item {
-            padding: 10px 12px;
-            border-bottom: 1px solid #f0f0f0;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--bg-gradient-start);
             cursor: pointer;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            transition: background 0.2s;
+            transition: var(--transition);
+        }
+
+        .food-item:last-child {
+            border-bottom: none;
         }
 
         .food-item:hover {
-            background: #f5f5f5;
+            background: var(--primary-light);
+            color: var(--primary);
         }
 
         .food-item strong {
-            color: #333;
             flex: 1;
+            font-weight: 500;
         }
 
         .food-item span {
-            background: #f0f0f0;
-            color: #666;
-            padding: 4px 8px;
-            border-radius: 4px;
+            background: var(--bg-gradient-start);
+            color: var(--text-muted);
+            padding: 4px 10px;
+            border-radius: var(--radius-full);
             font-size: 12px;
             font-weight: 600;
+            border: 1px solid var(--border);
         }
 
         .btn-add {
-            background: #667eea;
+            background: var(--primary);
             color: white;
             border: none;
-            padding: 12px 20px;
-            border-radius: 8px;
+            padding: 12px 24px;
+            border-radius: var(--radius-md);
             cursor: pointer;
             font-weight: 600;
-            transition: all 0.3s;
+            transition: var(--transition);
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
+            white-space: nowrap;
         }
 
         .btn-add:hover {
-            background: #5568d3;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
         }
 
         .btn-validate {
-            background: #4caf50;
+            background: var(--secondary);
             color: white;
             border: none;
-            padding: 12px 20px;
-            border-radius: 8px;
+            padding: 14px 24px;
+            border-radius: var(--radius-md);
             cursor: pointer;
             font-weight: 600;
-            transition: all 0.3s;
+            transition: var(--transition);
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             width: 100%;
             justify-content: center;
+            font-size: 16px;
+            box-shadow: 0 4px 6px rgba(16, 185, 129, 0.2);
         }
 
         .btn-validate:hover {
-            background: #45a049;
+            background: var(--secondary-hover);
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+            box-shadow: 0 6px 15px rgba(16, 185, 129, 0.3);
         }
 
         .meal-food-item {
-            background: #f9f9f9;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 8px;
+            background: var(--primary-light);
+            padding: 16px;
+            border-radius: var(--radius-md);
+            margin-bottom: 10px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-left: 4px solid #667eea;
+            border-left: 4px solid var(--primary);
+            transition: var(--transition);
+            border: 1px solid rgba(79, 70, 229, 0.1);
+        }
+
+        .meal-food-item:hover {
+            transform: translateX(4px);
+            background: #e0e7ff;
         }
 
         .meal-food-item strong {
-            color: #333;
-            font-size: 14px;
+            color: var(--text-main);
+            font-size: 15px;
+            font-weight: 600;
         }
 
         .meal-food-detail {
-            font-size: 12px;
-            color: #999;
+            font-size: 13px;
+            color: var(--text-muted);
             margin-top: 4px;
+            font-weight: 500;
         }
 
         .btn-delete {
-            background: #f44336;
-            color: white;
-            border: none;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
+            background: #fef2f2;
+            color: var(--danger);
+            border: 1px solid #fecaca;
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-full);
             cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s;
+            transition: var(--transition);
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
         .btn-delete:hover {
-            background: #d32f2f;
-            transform: scale(1.1);
+            background: var(--danger);
+            color: white;
+            transform: scale(1.1) rotate(90deg);
+            border-color: var(--danger);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
         }
 
         .meal-total {
-            background: #667eea;
+            background: linear-gradient(135deg, var(--primary), #818cf8);
             color: white;
-            padding: 12px;
-            border-radius: 8px;
+            padding: 16px;
+            border-radius: var(--radius-md);
             text-align: center;
-            font-weight: bold;
-            margin-top: 12px;
+            font-weight: 700;
+            margin-top: 16px;
+            font-size: 16px;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .calculation-section {
-            background: #f0f7ff;
-            border: 2px solid #667eea;
-            border-radius: 8px;
-            padding: 15px;
-            margin-top: 15px;
+            background: var(--bg-gradient-start);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            margin-top: 20px;
         }
 
-        .calculation-section > label {
+        .calculation-section>label {
             font-weight: 700;
-            color: #667eea;
-            font-size: 14px;
+            color: var(--primary);
+            font-size: 15px;
             display: block;
-            margin-bottom: 12px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .calculation-result {
-            background: white;
-            padding: 10px 12px;
-            border-radius: 6px;
-            color: #667eea;
-            font-weight: bold;
-            border-left: 4px solid #667eea;
-            font-size: 14px;
-            margin-bottom: 8px;
+            background: var(--surface);
+            padding: 14px 16px;
+            border-radius: var(--radius-md);
+            color: var(--primary);
+            font-weight: 700;
+            border-left: 4px solid var(--primary);
+            font-size: 15px;
+            margin-bottom: 12px;
+            box-shadow: var(--shadow-sm);
+            border-top: 1px solid var(--border);
+            border-right: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
         }
 
         .calculation-input-group {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
         }
 
-        .calculation-input-group > div {
+        .calculation-input-group>div {
             display: flex;
             flex-direction: column;
         }
 
         .calculation-input-group label {
             font-weight: 600;
-            color: #666;
-            font-size: 12px;
-            margin-bottom: 6px;
+            color: var(--text-muted);
+            font-size: 13px;
+            margin-bottom: 8px;
         }
 
         .calculation-input-group small {
             display: block;
-            color: #999;
-            font-size: 11px;
-            margin-top: 4px;
-            font-weight: normal;
+            color: #94a3b8;
+            font-size: 12px;
+            margin-top: 6px;
+            font-weight: 500;
         }
 
         .action-buttons {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 40px;
         }
 
-        .btn-primary, .btn-secondary, .btn-danger {
-            flex: 1;
-            min-width: 140px;
-            padding: 12px 16px;
+        .btn-primary,
+        .btn-secondary,
+        .btn-danger {
+            padding: 14px 20px;
             border: none;
-            border-radius: 10px;
+            border-radius: var(--radius-md);
             cursor: pointer;
             font-weight: 600;
-            font-size: 15px;
-            transition: all 0.2s ease;
+            font-size: 16px;
+            transition: var(--transition);
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            gap: 10px;
         }
 
         .btn-primary {
-            background: #4F46E5;
+            background: var(--primary);
             color: white;
-            font-weight: 600;
+            box-shadow: 0 4px 6px rgba(79, 70, 229, 0.2);
         }
 
         .btn-primary:hover {
-            background: #4338CA;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(79, 70, 229, 0.3);
         }
 
         .btn-secondary {
-            background: white;
-            color: #4F46E5;
-            border: 1px solid #E5E7EB;
+            background: var(--surface);
+            color: var(--primary);
+            border: 1px solid var(--border);
         }
 
         .btn-secondary:hover {
-            background: #F9FAFB;
-            border-color: #4F46E5;
-            box-shadow: 0 2px 8px rgba(79, 70, 229, 0.1);
+            background: var(--primary-light);
+            border-color: rgba(79, 70, 229, 0.2);
+            transform: translateY(-2px);
         }
 
         .btn-danger {
-            background: #EF4444;
+            background: var(--danger);
             color: white;
-            border: none;
+            box-shadow: 0 4px 6px rgba(239, 68, 68, 0.2);
         }
 
         .btn-danger:hover {
-            background: #DC2626;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+            background: var(--danger-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(239, 68, 68, 0.3);
+        }
+
+        #history-section {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            padding: 28px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+        }
+
+        .history-item {
+            background: var(--bg-gradient-start);
+            padding: 16px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: var(--transition);
+        }
+
+        .history-item:hover {
+            border-color: rgba(79, 70, 229, 0.2);
+            background: var(--surface);
+            transform: translateX(4px);
         }
 
         footer {
             text-align: center;
-            color: #6B7280;
-            font-size: 13px;
+            color: var(--text-muted);
+            padding: 40px 0 20px;
+            font-size: 14px;
+            font-weight: 500;
+            border-top: 1px solid var(--border);
             margin-top: 40px;
-            padding: 24px;
         }
 
-        @media (max-width: 600px) {
-            .action-buttons {
-                flex-direction: column;
+        footer a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        footer a:hover {
+            color: var(--primary-hover);
+            text-decoration: underline;
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 12px;
+            }
+
+            .meal-block,
+            .patient-info-block {
+                padding: 20px;
             }
 
             header h1 {
-                font-size: 22px;
+                font-size: 28px;
             }
 
-            .meal-block {
-                padding: 15px;
-            }
-
-            #alerts-container {
-                left: 20px;
-                right: 20px;
-            }
-
-            .patient-info-grid {
+            .action-buttons {
                 grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <header>
@@ -558,11 +716,13 @@
                 </div>
                 <div>
                     <label>Indice de Sensibilité à l'Insuline (g/u)</label>
-                    <input type="number" id="patient-insulin-sensitivity" placeholder="Ex: 12" min="0.1" max="100" step="0.1">
+                    <input type="number" id="patient-insulin-sensitivity" placeholder="Ex: 12" min="0.1" max="100"
+                        step="0.1">
                 </div>
                 <div>
                     <label>Ratio Petit Déjeuner (10g glucides = ? u)</label>
-                    <input type="number" id="patient-ratio-petit-dejeuner" placeholder="Ex: 1" min="0.1" max="10" step="0.1">
+                    <input type="number" id="patient-ratio-petit-dejeuner" placeholder="Ex: 1" min="0.1" max="10"
+                        step="0.1">
                 </div>
                 <div>
                     <label>Ratio Déjeuner (10g glucides = ? u)</label>
@@ -577,10 +737,20 @@
 
         <div id="meals-container"></div>
 
-        <!-- Historique des 10 derniers jours -->
         <div class="patient-info-block" id="history-section" style="display:none;">
             <h3><i class="fas fa-history"></i> Historique (10 derniers jours)</h3>
             <div id="history-list" style="display: grid; gap: 10px;"></div>
+        </div>
+
+        <!-- Tests Urinaires -->
+        <div class="patient-info-block">
+            <h3><i class="fas fa-vial"></i> Tests Urinaires</h3>
+            <div id="urine-tests-container"></div>
+            <button onclick="app.addUrineTestForm()" class="btn-secondary"
+                style="margin-top: 15px; width: 100%; border-style: dashed;">
+                <i class="fas fa-plus"></i> Ajouter un test urinaire
+            </button>
+            <div id="urine-tests-list" style="margin-top: 20px;"></div>
         </div>
 
         <div class="action-buttons">
@@ -606,49 +776,47 @@
     <footer>
         <p>GluciTracker • Suivi Glycémique & Insuline</p>
         <p style="margin-top: 10px; font-size: 12px; opacity: 0.9;">
-            <a href="https://github.com/DandaneRida" style="color: white; text-decoration: none;">Code Source</a> • 
+            <a href="https://github.com/DandaneRida" style="color: white; text-decoration: none;">Code Source</a> •
             <a href="mailto:ridadandane@gmail.com" style="color: white; text-decoration: none;">Contact</a>
         </p>
     </footer>
 
     <!-- Service Worker Registration for Offline Support -->
     <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('service-worker.js')
-            .then(reg => {
-              console.log('✅ Service Worker enregistré avec succès');
-              console.log('Scope:', reg.scope);
-              
-              // Vérifier les mises à jour
-              reg.addEventListener('updatefound', () => {
-                const newWorker = reg.installing;
-                newWorker.addEventListener('statechange', () => {
-                  if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                    console.log('🔄 Mise à jour disponible');
-                  }
-                });
-              });
-              
-              // Test offline
-              console.log('Mode offline supporté: ', 'serviceWorker' in navigator && 'caches' in window);
-            })
-            .catch(err => {
-              console.error('❌ Erreur Service Worker:', err);
-              console.error('URL du SW:', './service-worker.js');
-              console.error('Origine:', window.location.origin);
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('service-worker.js')
+                    .then(reg => {
+                        console.log('✅ Service Worker enregistré avec succès');
+                        console.log('Scope:', reg.scope);
+
+                        // Vérifier les mises à jour
+                        reg.addEventListener('updatefound', () => {
+                            const newWorker = reg.installing;
+                            newWorker.addEventListener('statechange', () => {
+                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                    console.log('🔄 Mise à jour disponible');
+                                }
+                            });
+                        });
+
+                        // Test offline
+                        console.log('Mode offline supporté: ', 'serviceWorker' in navigator && 'caches' in window);
+                    })
+                    .catch(err => {
+                        console.error('❌ Erreur Service Worker:', err);
+                        console.error('URL du SW:', './service-worker.js');
+                        console.error('Origine:', window.location.origin);
+                    });
             });
-        });
-      } else {
-        console.warn('⚠️ Service Worker non supporté par ce navigateur');
-      }
+        } else {
+            console.warn('⚠️ Service Worker non supporté par ce navigateur');
+        }
     </script>
 
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="data/ciqual-complete.js"></script>
     <script src="js/app.js"></script>
 </body>
+
 </html>
-
-
-
