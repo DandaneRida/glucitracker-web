@@ -1,0 +1,181 @@
+\documentclass[11pt, a4paper]{report}
+
+% ==================== PACKAGES ====================
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+\usepackage[top=2cm, bottom=2cm, left=2.5cm, right=2.5cm]{geometry}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage{titlesec}
+\usepackage[most]{tcolorbox}
+\usepackage{lmodern}
+
+% ==================== COULEURS ET STYLE ====================
+\definecolor{medblue}{RGB}{0, 51, 102} % Bleu marine
+\definecolor{gold}{RGB}{255, 165, 0}    % Or pour l'emphase
+\definecolor{darkgray}{RGB}{55, 65, 81}
+
+% Configuration des titres
+\titleformat{\section}{\color{medblue}\Large\bfseries}{\thesection}{1em}{}[\titlerule]
+\titleformat{\subsection}{\color{medblue}\large\bfseries}{\thesubsection}{1em}{}
+
+% ==================== CONFIGURATION DES PAGES ====================
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small \textcolor{medblue}{\textbf{GluciTracker} — Dossier Technique}}
+\rhead{\small \thepage}
+\cfoot{\small \thepage}
+\renewcommand{\headrulewidth}{0.5pt}
+
+% ==================== BEGIN DOCUMENT ====================
+\begin{document}
+
+% --- PAGE DE GARDE ENCADRÉE (Style demandé) ---
+\begin{titlepage}
+    \centering
+    \vspace*{1.5cm}
+
+    % Bloc Titre Principal
+    \begin{tcolorbox}[
+        enhanced,
+        colback=medblue,
+        colframe=gold,
+        arc=15pt,
+        width=0.9\textwidth,
+        boxrule=2pt,
+        center upper,
+        top=20pt, bottom=20pt
+    ]
+        {\Huge \textcolor{white}{\textbf{RAPPORT TECHNIQUE}}} \\[10pt]
+        {\huge \textcolor{white}{\textbf{GLUCITRACKER}}} \\[12pt]
+        {\large \textcolor{gold}{Dispositif d'Aide au Calcul de l'Insulinothérapie Fonctionnelle}}
+    \end{tcolorbox}
+
+    \vspace{2.5cm}
+
+    % Bloc Auteur
+    \begin{tcolorbox}[
+        colback=white,
+        colframe=medblue,
+        arc=10pt,
+        width=0.75\textwidth,
+        boxrule=1.2pt,
+        center upper,
+        top=15pt, bottom=15pt
+    ]
+        {\Large \textbf{Réalisé par :}} \\[8pt]
+        {\LARGE \textcolor{darkgray}{DANDANE RIDA}} \\[10pt]
+        
+        \textbf{Contact :} \texttt{ridadandane@gmail.com}
+    \end{tcolorbox}
+
+    \vspace{2cm}
+
+    % Bloc Encadrement / Date
+    \begin{tcolorbox}[
+        colback=white,
+        colframe=medblue,
+        arc=10pt,
+        width=0.6\textwidth,
+        boxrule=1.2pt,
+        center upper,
+        top=15pt, bottom=15pt
+    ]
+        {\Large \textbf{Document destiné au :}} \\[6pt]
+        {\large Corps Médical / Praticien Traitant} \\[15pt]
+        {\Large \textbf{Date :}} \\[6pt]
+        {\large \today}
+    \end{tcolorbox}
+
+    \vfill
+    \textcolor{medblue}{\textbf{Statut :}} \textbf{Production Ready — Conforme RGPD}
+\end{titlepage}
+
+\newpage
+\pagenumbering{arabic}
+
+% ==================== RÉSUMÉ EXÉCUTIF ====================
+\section*{Résumé Exécutif}
+\textbf{GluciTracker} est une application web moderne dédiée à l'optimisation du suivi glycémique et à l'automatisation du calcul des doses d'insuline. Développée en \textbf{Vanilla JavaScript}, l'application se distingue par son architecture \textbf{100\% locale}. Toutes les données médicales sont stockées exclusivement sur le terminal de l'utilisateur, garantissant une confidentialité totale conforme aux exigences du RGPD.
+
+\textbf{Fonctionnalités majeures :}
+\begin{itemize}
+    \item Base de données nutritionnelle certifiée (3484 aliments - Ciqual).
+    \item Algorithmes de calcul d'insuline basés sur des protocoles médicaux.
+    \item Exportation de rapports professionnels en format PDF.
+    \item Fonctionnement autonome hors-ligne (PWA).
+\end{itemize}
+
+\newpage
+
+% ==================== MÉTHODOLOGIE ET CALCULS ====================
+\section{Méthodologie de Calcul et Algorithmes}
+
+L'application automatise les calculs de l'insulinothérapie fonctionnelle en se basant sur les paramètres personnalisés définis par le prescripteur.
+
+\subsection{Calcul du Bolus Alimentaire}
+La dose prandiale est déterminée par la charge glucidique ingérée pondérée par le ratio d'insuline spécifique au moment du repas :
+\[ \text{Dose Repas} = \frac{\text{Glucides Totaux (g)}}{10} \times \text{Ratio Repas (u/10g)} \]
+
+\subsection{Calcul de la Dose de Correction}
+En cas de glycémie pré-prandiale supérieure à la cible de $1.2$ g/L, une dose de correction est calculée à l'aide de l'indice de sensibilité :
+\[ \text{Dose Correction} = \frac{\text{Glycémie Actuelle} - 1.2}{\text{Indice de Sensibilité}} \]
+
+\subsection{Protocoles de Sécurité (Prévention de l'Hypoglycémie)}
+Pour sécuriser le dosage et limiter le risque iatrogène, des ajustements automatiques sont intégrés :
+\begin{itemize}
+    \item \textbf{Glycémie entre 0.7 et 1.0 g/L :} Soustraction préventive d'une unité de la dose totale.
+    \item \textbf{Glycémie < 0.7 g/L :} Soustraction de deux unités et activation d'une alerte de resucrage immédiat.
+\end{itemize}
+
+\newpage
+
+% ==================== ARCHITECTURE TECHNIQUE ====================
+\section{Architecture Technique et Confidentialité}
+
+\subsection{Protection des Données (Privacy by Design)}
+GluciTracker a été conçu pour éliminer tout risque de fuite de données de santé :
+\begin{itemize}
+    \item \textbf{Zéro Backend :} Aucune donnée n'est envoyée vers des serveurs externes.
+    \item \textbf{Stockage Local :} Utilisation exclusive du \texttt{localStorage} du navigateur.
+    \item \textbf{Transparence :} Le code est statique, auditables et ne contient aucun traceur tiers.
+\end{itemize}
+
+\subsection{Stack Technologique}
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Couche} & \textbf{Technologie employée} \\ \midrule
+Interface & HTML5 / CSS3 (Responsive Design) \\
+Logique & Vanilla JavaScript (ES6+) \\
+Génération PDF & Librairie jsPDF (traitement côté client) \\
+Données & JSON (Référentiel Ciqual) \\ \bottomrule
+\end{tabular}
+\end{table}
+
+\newpage
+
+% ==================== GUIDE D'UTILISATION ====================
+\section{Guide d'Utilisation en Consultation}
+
+\subsection{Workflow Patient}
+Le patient renseigne ses paramètres (Nom, Dose basale, Indice de sensibilité, Ratios repas). À chaque repas, la saisie de la glycémie et des aliments permet une recommandation de dose immédiate.
+
+\subsection{Suivi et Historique}
+L'application conserve un historique glissant des 10 derniers jours. Le patient peut, lors de sa consultation, générer un rapport PDF contenant :
+\begin{itemize}
+    \item Le récapitulatif des paramètres de réglage.
+    \item Le détail des glucides consommés par repas.
+    \item L'historique des glycémies pré et post-prandiales.
+    \item Les doses d'insuline réellement administrées.
+\end{itemize}
+
+\section*{Conclusion}
+GluciTracker représente une solution fiable et sécurisée pour l'aide à l'insulinothérapie fonctionnelle. En combinant la précision algorithmique et le respect strict de la confidentialité, il constitue un outil précieux pour l'optimisation de l'équilibre glycémique du patient.
+
+\end{document}

@@ -1,0 +1,44 @@
+# Variables d'environnement et secrets
+.env
+.env.local
+.env.*.local
+
+# Fichiers système
+.DS_Store
+Thumbs.db
+*.log
+npm-debug.log
+
+# Éditeurs
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+*~
+
+# Dépendances Node.js
+node_modules/
+package-lock.json
+
+# Build et distribution
+build/
+dist/
+.vercel
+
+# Fichiers temporaires
+Untitled-1.md
+generate_pdf.py
+*.tmp
+
+yarn.lock
+
+# Build et artifacts
+dist/
+build/
+*.min.js
+*.min.css
+
+# Secrets et configs privées
+config.secret.js
+supabase-keys.json
+credentials.json
