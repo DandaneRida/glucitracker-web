@@ -9,7 +9,7 @@ Application web moderne pour suivre la glycémie, calculer les doses d'insuline 
   - Dose pour manger = (glucides ÷ 10) × ratio repas
   - Dose de correction = (glycémie - 1.2) ÷ indice sensibilité
   - Dose totale avec ajustements selon glycémie
-  - Correction 3h après (si glycémie > 1.6)
+  - Correction 3h après (si glycémie > 1.4)
 - 🍽️ Base alimentaire Ciqual (3484 aliments)
 - 📥 Export PDF professionnel avec ratios et doses calculées
 - 📅 Historique 10 derniers jours
@@ -66,8 +66,7 @@ vercel
 - **Dose totale** = dose repas + dose correction
   - Si glycémie 0.7-1.0 g/L : dose - 1u
   - Si glycémie < 0.7 g/L : dose - 2u + alerte resucrage
-  - Si > 120 g de glucides : dose + 2u
-- **Correction 3h après** = (glycémie - 1.6) ÷ indice sensibilité (si glyc. > 1.6 g/L)
+- **Correction 3h après** = (glycémie - 1.4) ÷ indice sensibilité (si glyc. > 1.4 g/L)
 
 ## 📊 Export PDF
 
@@ -125,6 +124,12 @@ MIT License - Libre d'utilisation
 
 ---
 
-**Version** : 1.0.0  
+**Version** : 2.0.0  
 **Status** : ✅ Production Ready
 
+
+## 👨‍💻 Auteur
+
+**Rida Dandane**
+- 🔗 GitHub: [@DandaneRida](https://github.com/DandaneRida)
+- 📧 Email: [ridadancane@gmail.com](mailto:ridadandane@gmail.com)
